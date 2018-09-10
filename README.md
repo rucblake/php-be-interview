@@ -1,5 +1,9 @@
 # php面试相关
 
+## tip
+
+这个文档只是一个提纲，以及一些可能的考点或者demo代码。列出了大概的技术栈，每一个点都需要花更多的时间去深入钻研，万不能只看一点点皮毛就去面试。而应该在广泛学习的基础上，通过文档里的每一个点引出无数个思维方向，从而在大脑里形成一个自己的知识树，明白自己的欠缺，不断学习，丰富自己的技术栈。
+
 ## redis
 
 Redis是一个开源的使用ANSI C语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。
@@ -9,7 +13,10 @@ redis包括string(字符串)、list(链表)、set(集合)、zset(sorted set --�
 #### php中reids的操作
 
 ```php
-//配置连接的IP、端口、以及相应的数据库
+// from 菜鸟runoob
+// 从代码中以点带面，在什么样的场景中会运用到
+
+// 配置连接的IP、端口、以及相应的数据库
 $server = array(
 ‘host’     => ’127.0.0.1′,
 ‘port’     => 6379,
@@ -17,22 +24,22 @@ $server = array(
 );
 $redis = new Client($server);
 
-//普通set/get操作
+// 普通set/get操作
 $redis->set(‘library’, ‘predis’);
 $retval = $redis->get(‘library’);
 echo $retval; //显示 ‘predis’
 
 $redis->exists(‘foo’);//true
 
-//del 删除
+// del 删除
 $redis->del(‘foo’);//true
 
-//hset/hget 存取hash表的数据
+// hset/hget 存取hash表的数据
 $redis->hset(‘hash1′,’key1′,’v1′); //将key为’key1′ value为’v1′的元素存入hash1表
 $redis->hset(‘hash1′,’key2′,’v2′);
 $redis->hget(‘hash1′,’key1′);  //取出表’hash1′中的key ‘key1′的值,返回’v1′
 
-//同步保存服务器数据到磁盘
+// 同步保存服务器数据到磁盘
 $redis->save();
 ```
 
@@ -91,6 +98,13 @@ $stmt->execute();
 $stmt->close();
 ```
 
+#### mysql索引
+
+- **非常重要！**
+
+了解InnoDB和Myisam，B+tree,聚簇索引等等
+[InnoDB索引原理详解](https://www.cnblogs.com/shijingxiang/articles/4743324.html)
+
 ## MongoDB
 
 MongoDB 是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中功能最丰富，最像关系数据库的。它支持的数据结构非常松散，是类似json的bson格式，因此可以存储比较复杂的数据类型。Mongo最大的特点是它支持的查询语言非常强大，其语法有点类似于面向对象的查询语言，几乎可以实现类似关系数据库单表查询的绝大部分功能，而且还支持对数据建立索引。
@@ -107,6 +121,7 @@ primary key|primary key|主键,MongoDB自动将_id字段设置为主键
 
 ```php
 <?php
+// from runoob
 $m = new MongoClient(); // 连接默认主机和端口为：mongodb://localhost:27017
 $db = $m->test; // 获取名称为 "test" 的数据库
 
@@ -189,15 +204,6 @@ XSS又称CSS，全称Cross SiteScript(跨站脚本攻击)， XSS攻击类似于S
 
 php防止XSS跨站脚本攻击的方法：是针对非法的HTML代码包括单双引号等，使用htmlspecialchars()函数。
 
-在使用htmlspecialchars()函数的时候注意第二个参数, 直接用htmlspecialchars($string)的话，第二个参数默认是ENT_COMPAT，函数默认只是转化双引号(")，不对单引号(')做转义。
-
-所以，htmlspecialchars()函数更多的时候要加上第二个参数，应该这样用: htmlspecialchars(string,ENT_QUOTES)。当然，如果需要不转化如何的引号，用htmlspecialchars($string,ENT_NOQUOTES)。
-
-另外，尽量少用htmlentities(), 在全部英文的时候htmlentities()和htmlspecialchars()没有区别，都可以达到目的。但是，中文情况下, htmlentities()却会转化所有的html代码，连同里面的它无法识别的中文字符也给转化了。
-
-htmlentities()和htmlspecialchars()这两个函数对单引号(')之类的字符串支持不好，都不能转化， 所以用htmlentities()和htmlspecialchars()转化的字符串只能防止XSS攻击，不能防止SQL注入攻击。
-
-所有有打印的语句如echo，print等，在打印前都要使用htmlentities()进行过滤，这样可以防止XSS，注意中文要写出htmlentities($name,ENT_NOQUOTES,GB2312)。
 
 #### [静态化如何实现的](https://blog.csdn.net/qq_39618306/article/details/79014438)
 这里要说的静态化指的是页面静态化，也即生成实实在在的静态文件，也即不需要查询数据库就可以直接从文件中获取数据，指的是真静态。它的实现方式主要有两种：
@@ -224,6 +230,19 @@ htmlentities()和htmlspecialchars()这两个函数对单引号(')之类的字符
 5. 负载均衡：
 Apache的最大并发连接为1500，只能增加服务器，可以从硬件上着手，如F5服务器。当然硬件的成本比较高，我们往往从软件方面着手。
 **负载均衡**建立在现有网络结构之上，它提供了一种廉价有效透明的方法扩展网络设备和服务器的带宽、增加吞吐量、加强网络数据处理能力，同时能够提高网络的灵活性和可用性。目前使用最为广泛的负载均衡软件是Nginx、LVS、HAProxy。
+- 知识点： [反向代理](https://www.cnblogs.com/Anker/p/6056540.html)
+
+## 服务器
+
+心中有概念，然后足够的实际操作。
+
+#### Apache
+
+[百度百科介绍](https://baike.baidu.com/item/apache/6265)
+
+#### Nginx
+
+[百度百科介绍](https://baike.baidu.com/item/nginx/3817705)
 
 ## php特性
 
@@ -421,7 +440,9 @@ var_dump(intdiv(10, 3));
 
 [48条高效率的PHP优化写法](https://www.awaimai.com/1050.html)
 
-## linux 相关
+## 操作系统相关
+
+操作系统是本科计算机中可以说是非常重要的课程，一定要认真复习。
 
 #### linux常用命令及工具
 `ps aux` 查看进程pid等常用
@@ -433,6 +454,10 @@ var_dump(intdiv(10, 3));
 `tail -f file` 实时查看文件变化
 `contab` 定时任务工具
 ……
+
+#### 进程各个状态
+
+[进程的状态和转换详解](https://blog.csdn.net/qwe6112071/article/details/70473905)
 
 ## 网络相关
 
@@ -505,8 +530,13 @@ HTTPS 约等于 HTTP+SSL
 - 缺点
 证书需要申请，服务器资源占用更高，连接建立需要传送证书，速度更慢.
 
-#### TCP/IP三次握手四次挥手
+#### TCP/IP
 
+[四层模型及OSI七层参考模型](https://blog.csdn.net/guoguo527/article/details/52078962)
+
+[三次握手四次挥手](https://www.cnblogs.com/Jessy/p/3535612.html)
+
+简略快速回忆版：
 - 三次握手
 客户端：我要和你通信(syn-sent)
 服务端：你的请求已收到，发送确认(syn-rcvd)
@@ -519,4 +549,8 @@ HTTPS 约等于 HTTP+SSL
 服务端：我的东西传完了，可以关闭了(last-ack)
 客户端：收到关闭通知，你也可以关闭了(time-wait)
 
-[参考提纲](https://blog.csdn.net/qq_16014497/article/details/79487971)
+## 算法相关
+
+各种数据结构，栈图树；各种算法，动态规划balabala
+
+中等难度算法题在解答基础上提高速度，高级算法题能够有思路，不求ac，至少通过一部分。
